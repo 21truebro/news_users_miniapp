@@ -1,0 +1,6 @@
+{
+  "name": "Новостная лента",
+  "description": "Мобильное приложение с лентой новостей и событий",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": []
+}
