@@ -2,18 +2,46 @@
 @import "./typography.css";
 @import "tailwindcss";
 
-@theme {
-  --color-app-bg: #DADEE6;
-  --color-surface: #FFFFFF;
-  --color-surface-hover: #F8F9FA;
-  --color-surface-dim: #F3F4F6;
-  --color-border: #E5E7EB;
-  --color-border-strong: #D1D5DB;
+:root {
+  --background-color: #DADEE6;
+  --surface-color: #FFFFFF;
+  --surface-hover-color: #F8F9FA;
+  --surface-dim-color: #F3F4F6;
+  --border-color: #E5E7EB;
+  --border-strong-color: #D1D5DB;
   
-  --color-content-primary: #111827;
-  --color-content-secondary: #4B5563;
-  --color-content-tertiary: #9CA3AF;
-  --color-content-accent: #007AFF;
+  --text-color: #111827;
+  --text-secondary-color: #4B5563;
+  --text-tertiary-color: #9CA3AF;
+  --primary-color: #007AFF;
+}
+
+.dark {
+  --background-color: #09090b;
+  --surface-color: #18181b;
+  --surface-hover-color: #27272a;
+  --surface-dim-color: #0f0f11;
+  --border-color: #27272a;
+  --border-strong-color: #3f3f46;
+  
+  --text-color: #F8FAFC;
+  --text-secondary-color: #CBD5E1;
+  --text-tertiary-color: #64748B;
+  --primary-color: #3B82F6;
+}
+
+@theme {
+  --color-app-bg: var(--background-color);
+  --color-surface: var(--surface-color);
+  --color-surface-hover: var(--surface-hover-color);
+  --color-surface-dim: var(--surface-dim-color);
+  --color-border: var(--border-color);
+  --color-border-strong: var(--border-strong-color);
+  
+  --color-content-primary: var(--text-color);
+  --color-content-secondary: var(--text-secondary-color);
+  --color-content-tertiary: var(--text-tertiary-color);
+  --color-content-accent: var(--primary-color);
   
   --radius-card: 24px;
   --radius-pill: 9999px;

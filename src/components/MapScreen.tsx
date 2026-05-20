@@ -5,13 +5,17 @@ import { Icon } from './ui/Icon';
 import { IconButton } from './ui/IconButton';
 import ArticleCard from './ArticleCard';
 import { AnimatePresence, motion } from 'motion/react';
+import { useTheme } from '../context/ThemeContext';
+import { darkMapStyle } from '../utils/mapStyles';
 
 interface MapScreenProps {
   articles: Article[];
   onArticleSelect: (article: Article) => void;
   addressQuery?: string;
   bookmarkedIds?: string[];
-  onToggleBookmark?: (id: string) => void;
+  onToggleBookmark?: (id: string, e: React.MouseEvent) => void;
+  reactions?: Record<string, 'like' | 'dislike' | null>;
+  onReact?: (id: string, type: 'like' | 'dislike') => void;
 }
 
 export default function MapScreen({ 
@@ -19,7 +23,9 @@ export default function MapScreen({
   onArticleSelect, 
   addressQuery,
   bookmarkedIds = [],
-  onToggleBookmark
+  onToggleBookmark,
+  reactions = {},
+  onReact
 }: MapScreenProps) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [ymaps, setYmaps] = useState<any>(null);
@@ -27,6 +33,8 @@ export default function MapScreen({
   const [showBreakingToast, setShowBreakingToast] = useState(true);
   const [mapCenter, setMapCenter] = useState<[number, number]>([55.751244, 37.618423]);
   const [topArticle, setTopArticle] = useState<Article | null>(null);
+  
+  const { theme } = useTheme() || { theme: 'light' };
 
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const isProgrammaticScroll = React.useRef(false);
@@ -209,6 +217,7 @@ export default function MapScreen({
     <div className="relative w-full h-full bg-surface overflow-hidden">
       <YMaps query={{ apikey: '65234452-c9e4-4f6b-ac33-692ada2572c6' }}>
         <Map
+          key={theme}
           defaultState={{ center: [55.751244, 37.618423], zoom: 12, controls: [] }}
           state={userLocation && !addressQuery ? { center: userLocation, zoom: 12, controls: [] } : defaultState}
           width="100%"
@@ -220,6 +229,11 @@ export default function MapScreen({
           }}
           onBoundsChange={handleBoundsChange}
           onClick={() => setPreviewArticle(null)}
+          instanceRef={(ref) => {
+            if (ref) {
+              ref.options.set('customization', theme === 'dark' ? darkMapStyle : []);
+            }
+          }}
           options={{
             suppressMapOpenBlock: true,
             yandexMapDisablePoiInteractivity: true,
@@ -279,7 +293,7 @@ export default function MapScreen({
         <div 
           ref={carouselRef}
           onScroll={handleScroll}
-          className="w-full overflow-x-auto flex gap-3 px-8 md:px-[calc(50vw-200px)] py-4 pointer-events-auto no-scrollbar snap-x snap-mandatory scroll-smooth"
+          className="w-full overflow-x-auto flex gap-2 px-[9vw] md:px-[calc(50vw-200px)] py-4 pointer-events-auto no-scrollbar snap-x snap-mandatory scroll-smooth"
         >
           {articles.map((article) => {
             const isSelected = previewArticle?.id === article.id;
@@ -288,10 +302,10 @@ export default function MapScreen({
                 key={article.id}
                 data-article-id={article.id}
                 className={`
-                  w-[calc(100vw-64px)] md:w-[400px] shrink-0 snap-center transition-all duration-300 cursor-pointer rounded-[16px]
+                  w-[82vw] md:w-[400px] shrink-0 snap-center transition-all duration-300 cursor-pointer rounded-[16px]
                   ${isSelected 
                     ? 'scale-100 opacity-100 shadow-[0_16px_40px_rgba(17,24,39,0.12)]' 
-                    : 'scale-95 opacity-80 shadow-none'
+                    : 'scale-[0.97] opacity-80 shadow-none'
                   }
                 `}
               >
@@ -299,7 +313,8 @@ export default function MapScreen({
                   article={article} 
                   variant="compact"
                   isBookmarked={bookmarkedIds.includes(article.id)}
-                  onToggleBookmarked={onToggleBookmark ? (id) => onToggleBookmark(id) : undefined}
+                  reaction={reactions[article.id]}
+                  onReact={onReact ? (type, e) => onReact(article.id, type) : undefined}
                   onClick={() => {
                     if (isSelected) {
                       onArticleSelect(article);

@@ -22,10 +22,33 @@ export default function App() {
     }
   });
 
+  const [reactions, setReactions] = useState<{ [articleId: string]: 'like' | 'dislike' }>(() => {
+    try {
+      const saved = localStorage.getItem('article_reactions');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
   const handleToggleBookmark = (id: string) => {
     setBookmarkedIds(prev => {
       const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
       localStorage.setItem('bookmarked_articles', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const handleReaction = (id: string, type: 'like' | 'dislike') => {
+    setReactions(prev => {
+      const current = prev[id];
+      const next = { ...prev };
+      if (current === type) {
+        delete next[id]; // Toggle off
+      } else {
+        next[id] = type;
+      }
+      localStorage.setItem('article_reactions', JSON.stringify(next));
       return next;
     });
   };
@@ -74,6 +97,8 @@ export default function App() {
                 onFiltersChange={setFilters} 
                 bookmarkedIds={bookmarkedIds}
                 onToggleBookmark={handleToggleBookmark}
+                reactions={reactions}
+                onReact={handleReaction}
               />
             </motion.div>
           )}
@@ -92,6 +117,8 @@ export default function App() {
                 addressQuery={filters.address}
                 bookmarkedIds={bookmarkedIds}
                 onToggleBookmark={handleToggleBookmark}
+                reactions={reactions}
+                onReact={handleReaction}
               />
             </motion.div>
           )}
@@ -109,6 +136,8 @@ export default function App() {
                 bookmarkedIds={bookmarkedIds}
                 onSelect={setSelectedArticle}
                 onToggleBookmark={handleToggleBookmark}
+                reactions={reactions}
+                onReact={handleReaction}
               />
             </motion.div>
           )}
@@ -153,6 +182,8 @@ export default function App() {
               onBack={() => setSelectedArticle(null)} 
               isBookmarked={bookmarkedIds.includes(selectedArticle.id)}
               onToggleBookmarked={() => handleToggleBookmark(selectedArticle.id)}
+              reaction={reactions[selectedArticle.id]}
+              onReact={(type) => handleReaction(selectedArticle.id, type)}
             />
           </div>
         )}

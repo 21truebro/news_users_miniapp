@@ -43,6 +43,8 @@ export interface Article {
   distance?: string;
   timeAgo: string;
   timestamp: string; // "02.05.2026 12:00"
+  likesCount?: number;
+  dislikesCount?: number;
 }
 
 export interface Category {

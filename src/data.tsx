@@ -23,6 +23,8 @@ export const articles: Article[] = [
     distance: '24 км от вас',
     timeAgo: '24 мин назад',
     timestamp: '02.05.2026 12:00',
+    likesCount: 142,
+    dislikesCount: 12,
     blocks: [
       {
         type: 'audio',
@@ -62,7 +64,7 @@ export const articles: Article[] = [
           text: 'Культурный обмен между нашими странами достигает нового уровня. Этот фестиваль — не просто праздник, а мост между двумя великими цивилизациями.',
           author: 'Ли Вэй',
           source: 'Министерство культуры КНР',
-          avatar: 'https://i.pravatar.cc/150?u=liwei'
+          avatar: '/img/avatar_liwei.png'
         }
       },
       {
@@ -111,6 +113,8 @@ export const articles: Article[] = [
     distance: '39 км от вас',
     timeAgo: '2 часа назад',
     timestamp: '02.05.2026 10:00',
+    likesCount: 89,
+    dislikesCount: 5,
     blocks: [
       {
         type: 'text',
@@ -144,7 +148,7 @@ export const articles: Article[] = [
           text: 'Мы очень гордимся нашими манулами. Каждый котенок имеет огромную ценность для сохранения этого удивительного вида.',
           author: 'Светлана Акулова',
           source: 'Директор Московского зоопарка',
-          avatar: 'https://i.pravatar.cc/150?u=akulova'
+          avatar: '/img/avatar_akulova.png'
         }
       },
       {
@@ -168,6 +172,8 @@ export const articles: Article[] = [
     distance: '12 км от вас',
     timeAgo: '5 часов назад',
     timestamp: '02.05.2026 07:00',
+    likesCount: 312,
+    dislikesCount: 45,
     blocks: [
       {
         type: 'text',
@@ -176,8 +182,8 @@ export const articles: Article[] = [
       {
         type: 'gallery',
         images: [
-          'https://images.unsplash.com/photo-1550974868-b7858d4a9740?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1542272201-b1ca555f8505?auto=format&fit=crop&q=80&w=600'
+          '/img/park_gallery_1.png',
+          '/img/park_gallery_2.png'
         ]
       },
       {
@@ -195,7 +201,7 @@ export const articles: Article[] = [
           text: 'Парк получил совершенно новый облик, сохранив свою историческую идентичность. Это пространство для каждого жителя.',
           author: 'Архитектор проекта',
           source: 'КБ Стрелка',
-          avatar: 'https://i.pravatar.cc/150?u=architect'
+          avatar: '/img/avatar_architect.png'
         }
       },
       {
@@ -219,6 +225,8 @@ export const articles: Article[] = [
     distance: '18 км от вас',
     timeAgo: '1 день назад',
     timestamp: '01.05.2026 14:30',
+    likesCount: 56,
+    dislikesCount: 2,
     blocks: [
       {
         type: 'text',
@@ -227,8 +235,8 @@ export const articles: Article[] = [
       {
         type: 'gallery',
         images: [
-          'https://images.unsplash.com/photo-1598967963335-51fb9df3ee88?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1623912165038-16e07ab46401?auto=format&fit=crop&q=80&w=600'
+          '/img/metro_gallery_1.png',
+          '/img/metro_gallery_2.png'
         ]
       },
       {
@@ -242,7 +250,7 @@ export const articles: Article[] = [
       },
       {
         type: 'image-text',
-        imageUrl: 'https://images.unsplash.com/photo-1517590824905-2d4e8c1ab9fd?auto=format&fit=crop&q=80&w=400',
+        imageUrl: '/img/metro_text_1.png',
         sideText: 'Прямые эскалаторы ведут к стойкам регистрации. Это первый подобный опыт строительства подземного терминала в России, который значительно упростит логистику.'
       },
       {
@@ -251,7 +259,7 @@ export const articles: Article[] = [
           text: 'Мы создали бесшовную среду для путешественников. Путь из центра города до аэропорта теперь займет гарантированные 40 минут.',
           author: 'Андрей Бочкарев',
           source: 'Депстрой Москвы',
-          avatar: 'https://i.pravatar.cc/150?u=bochkarev'
+          avatar: '/img/avatar_bochkarev.png'
         }
       },
       {
@@ -275,6 +283,8 @@ export const articles: Article[] = [
     distance: '8 км от вас',
     timeAgo: 'Вчера',
     timestamp: '01.05.2026 09:15',
+    likesCount: 201,
+    dislikesCount: 18,
     blocks: [
       {
         type: 'text',
@@ -283,8 +293,8 @@ export const articles: Article[] = [
       {
         type: 'gallery',
         images: [
-          'https://images.unsplash.com/photo-1601625463688-66236bce2643?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=600'
+          '/img/dtp_gallery_1.png',
+          '/img/dtp_gallery_2.png'
         ]
       },
       {
@@ -298,7 +308,7 @@ export const articles: Article[] = [
       },
       {
         type: 'image-text',
-        imageUrl: 'https://images.unsplash.com/photo-1588523315714-3a7fae448375?auto=format&fit=crop&q=80&w=400',
+        imageUrl: '/img/dtp_text_1.png',
         sideText: 'На месте работают несколько экипажей ДПС, кареты скорой помощи и пожарная техника. Специалисты занимаются деблокированием проезжей части от поврежденных авто.'
       },
       {
@@ -307,7 +317,7 @@ export const articles: Article[] = [
           text: 'Причиной столкновения мог стать отказ тормозной системы у большегруза. Точные обстоятельства устанавливаются.',
           author: 'Пресс-служба ГИБДД',
           source: 'УГИБДД ГУ МВД России по г. Москве',
-          avatar: 'https://i.pravatar.cc/150?u=gibdd'
+          avatar: '/img/avatar_gibdd.png'
         }
       },
       {

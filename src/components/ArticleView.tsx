@@ -15,6 +15,8 @@ interface Props {
   onBack: () => void;
   isBookmarked?: boolean;
   onToggleBookmarked?: () => void;
+  reaction?: 'like' | 'dislike';
+  onReact?: (type: 'like' | 'dislike') => void;
 }
 
 // Stateful Gallery Component
@@ -33,6 +35,7 @@ const InteractiveGallery = ({ images }: { images: string[] }) => {
           className="w-full h-full object-cover cursor-zoom-in transition-transform duration-300 hover:scale-[1.01]" 
           alt={`Gallery image ${activeIndex + 1}`}
           onClick={() => setIsFullscreen(true)}
+          referrerPolicy="no-referrer"
         />
         
         {/* Navigation arrows */}
@@ -70,7 +73,7 @@ const InteractiveGallery = ({ images }: { images: string[] }) => {
                 idx === activeIndex ? 'border-content-accent opacity-100 scale-105' : 'border-transparent opacity-60 hover:opacity-100'
               }`}
             >
-              <img src={img} className="w-full h-full object-cover" alt="" />
+              <img src={img} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
             </button>
           ))}
         </div>
@@ -98,6 +101,7 @@ const InteractiveGallery = ({ images }: { images: string[] }) => {
               src={images[activeIndex]} 
               className="max-w-full max-h-[80vh] object-contain rounded-lg" 
               alt={`Fullscreen ${activeIndex + 1}`} 
+              referrerPolicy="no-referrer"
             />
 
             {/* Large navigation bounds */}
@@ -129,7 +133,7 @@ const InteractiveGallery = ({ images }: { images: string[] }) => {
                   idx === activeIndex ? 'border-white opacity-100 scale-105' : 'border-transparent opacity-40 hover:opacity-100'
                 }`}
               >
-                <img src={img} className="w-full h-full object-cover" alt="" />
+                <img src={img} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" />
               </button>
             ))}
           </div>
@@ -291,7 +295,7 @@ const UpdatesTimeline = ({
       <div className="relative border-l border-border/80 ml-3 pl-6 space-y-6">
         {updates.map((upd, idx) => (
           <div key={idx} className="relative">
-            <div className={`absolute -left-[31px] top-1 w-6 h-6 rounded-full bg-surface border-2 flex items-center justify-center shadow-sm ${
+            <div className={`absolute -left-[36px] top-1 w-6 h-6 rounded-full bg-surface border-2 flex items-center justify-center shadow-sm ${
               idx === 0 ? 'border-content-accent' : 'border-border-strong'
             }`}>
               {idx === 0 ? (
@@ -358,7 +362,7 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
           <p className="md-body-l italic text-content-primary mb-4 leading-relaxed">"{block.quote?.text}"</p>
           <div className="flex items-center gap-4">
             {block.quote?.avatar && (
-              <img src={block.quote.avatar} className="w-12 h-12 rounded-full border border-border object-cover" alt={block.quote.author} />
+              <img src={block.quote.avatar} className="w-12 h-12 rounded-full border border-border object-cover" alt={block.quote.author} referrerPolicy="no-referrer" />
             )}
             <div>
               <p className="md-label-m text-content-primary font-semibold">{block.quote?.author}</p>
@@ -370,7 +374,7 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
     case 'image-text':
       return (
         <div className="flex gap-5 items-start my-6">
-          <img src={block.imageUrl} className="w-1/3 aspect-square object-cover rounded-[16px] shadow-sm" alt="Illustration" />
+          <img src={block.imageUrl} className="w-1/3 aspect-square object-cover rounded-[16px] shadow-sm" alt="Illustration" referrerPolicy="no-referrer" />
           <p className="flex-1 md-body-m text-content-primary leading-relaxed">{block.sideText}</p>
         </div>
       );
@@ -400,7 +404,7 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
   }
 };
 
-export default function ArticleView({ article, onBack, isBookmarked = false, onToggleBookmarked }: Props) {
+export default function ArticleView({ article, onBack, isBookmarked = false, onToggleBookmarked, reaction, onReact }: Props) {
   const dragControls = useDragControls();
   
   React.useEffect(() => {
@@ -486,6 +490,7 @@ export default function ArticleView({ article, onBack, isBookmarked = false, onT
             src={article.imageUrl} 
             alt={article.title} 
             className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
@@ -528,9 +533,39 @@ export default function ArticleView({ article, onBack, isBookmarked = false, onT
             ))}
           </div>
           
-          <div className="mt-12 pt-6 border-t border-border flex justify-between items-center text-content-tertiary">
-            <span className="md-label-s">Опубликовано</span>
-            <span className="md-label-m font-mono">{article.timestamp}</span>
+          <div className="mt-8 pt-6 flex flex-col gap-6 border-t border-border">
+            <div className="flex justify-between items-center bg-surface-dim/50 rounded-full p-1 border border-border/50">
+              <span className="md-label-s text-content-secondary pl-4">Оцените новость</span>
+              <div className="flex gap-1">
+                <button 
+                  onClick={() => onReact?.('dislike')}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all ${
+                    reaction === 'dislike' 
+                      ? 'bg-red-500/10 text-red-600' 
+                      : 'hover:bg-surface-hover text-content-secondary'
+                  }`}
+                >
+                  <Icon name="thumb_down" size={20} filled={reaction === 'dislike'} />
+                  {article.dislikesCount !== undefined && <span className="font-medium text-sm">{article.dislikesCount + (reaction === 'dislike' ? 1 : 0)}</span>}
+                </button>
+                <button 
+                  onClick={() => onReact?.('like')}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all ${
+                    reaction === 'like' 
+                      ? 'bg-green-500/10 text-green-600' 
+                      : 'hover:bg-surface-hover text-content-secondary'
+                  }`}
+                >
+                  <Icon name="thumb_up" size={20} filled={reaction === 'like'} />
+                  {article.likesCount !== undefined && <span className="font-medium text-sm">{article.likesCount + (reaction === 'like' ? 1 : 0)}</span>}
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-center text-content-tertiary">
+              <span className="md-label-s">Опубликовано</span>
+              <span className="md-label-m font-mono">{article.timestamp}</span>
+            </div>
           </div>
         </div>
       </div>

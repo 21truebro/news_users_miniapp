@@ -35,10 +35,10 @@ export function FilterModal({ isOpen, onClose, onApply, initialFilters }: Filter
   // Sync state when modal opens
   React.useEffect(() => {
     if (isOpen) {
-      setRelevance(initialFilters.relevance);
-      setTimeFilter(initialFilters.timeFilter);
-      setSelectedRubrics(initialFilters.selectedRubrics);
-      setSelectedPlots(initialFilters.selectedPlots);
+      setRelevance(initialFilters.relevance || 'all');
+      setTimeFilter(initialFilters.timeFilter || 'hour');
+      setSelectedRubrics((initialFilters.selectedRubrics && initialFilters.selectedRubrics.length > 0) ? initialFilters.selectedRubrics : rubricOptions);
+      setSelectedPlots((initialFilters.selectedPlots && initialFilters.selectedPlots.length > 0) ? initialFilters.selectedPlots : plotOptions);
     }
   }, [isOpen, initialFilters]);
 
@@ -57,8 +57,8 @@ export function FilterModal({ isOpen, onClose, onApply, initialFilters }: Filter
   const handleReset = () => {
     setRelevance('all');
     setTimeFilter('hour');
-    setSelectedRubrics([]);
-    setSelectedPlots([]);
+    setSelectedRubrics(rubricOptions);
+    setSelectedPlots(plotOptions);
   };
 
   const handleSave = () => {
@@ -167,3 +167,6 @@ export function FilterModal({ isOpen, onClose, onApply, initialFilters }: Filter
     </AnimatePresence>
   );
 }
+
+
+

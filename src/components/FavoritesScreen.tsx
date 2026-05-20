@@ -8,14 +8,16 @@ interface Props {
   bookmarkedIds: string[];
   onSelect: (article: Article) => void;
   onToggleBookmark: (articleId: string) => void;
+  reactions: Record<string, 'like' | 'dislike' | null>;
+  onReact: (id: string, type: 'like' | 'dislike') => void;
 }
 
-export default function FavoritesScreen({ articles, bookmarkedIds, onSelect, onToggleBookmark }: Props) {
+export default function FavoritesScreen({ articles, bookmarkedIds, onSelect, onToggleBookmark, reactions, onReact }: Props) {
   // Filter bookmarked articles
   const favoriteArticles = articles.filter(article => bookmarkedIds.includes(article.id));
 
   return (
-    <div className="w-full max-w-md mx-auto pt-6 pb-28 px-4 flex flex-col gap-6">
+    <div className="w-full max-w-md mx-auto pt-6 pb-32 px-4 flex flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col gap-1 px-1">
         <h1 className="md-headline-m font-semibold text-content-primary">Избранное</h1>
@@ -47,8 +49,10 @@ export default function FavoritesScreen({ articles, bookmarkedIds, onSelect, onT
               key={article.id} 
               article={article} 
               isBookmarked={true}
-              onToggleBookmarked={() => onToggleBookmark(article.id)}
               onClick={() => onSelect(article)} 
+              reaction={reactions[article.id]}
+              onReact={(type, e) => onReact(article.id, type)}
+              onRemoveBookmark={(e) => onToggleBookmark(article.id)}
             />
           ))}
         </div>

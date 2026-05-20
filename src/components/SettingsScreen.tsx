@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
+import { useTheme } from '../context/ThemeContext';
 import { Icon } from './ui/Icon';
 import { UserLocation } from '../types';
 import { DistrictLabel } from './ui/DistrictLabel';
@@ -20,7 +21,8 @@ export default function SettingsScreen({ onOpenFilters }: { onOpenFilters: () =>
 
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   const handleDelete = (id: string) => {
     setLocations(prev => prev.filter(l => l.id !== id));
@@ -49,9 +51,9 @@ export default function SettingsScreen({ onOpenFilters }: { onOpenFilters: () =>
   };
 
   return (
-    <div className="w-full h-full bg-app-bg pt-safe pb-24 overflow-y-auto">
+    <div className="w-full h-full bg-app-bg pt-safe pb-32 overflow-y-auto">
       <div className="px-5 pt-8">
-        <h2 className="md-label-s text-content-tertiary uppercase tracking-wider mb-4 px-1">Настройки</h2>
+        <h2 className="md-label-s text-content-tertiary uppercase tracking-wider mb-4 px-1">Лента новостей</h2>
         <div className="flex flex-col gap-3">
           <button 
             onClick={onOpenFilters}
@@ -102,7 +104,7 @@ export default function SettingsScreen({ onOpenFilters }: { onOpenFilters: () =>
               rightElement: (
                 <Switch 
                   checked={isDark} 
-                  onChange={(checked) => setIsDark(checked)} 
+                  onChange={toggleTheme} 
                 />
               )
             },
@@ -189,6 +191,7 @@ export default function SettingsScreen({ onOpenFilters }: { onOpenFilters: () =>
 }
 
 function LocationItem({ location, onDeleteRequest, onEditRequest }: { location: UserLocation; onDeleteRequest: () => void; onEditRequest: () => void }) {
+  const isDragging = useRef(false);
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-100, -50, 0], [1, 0.5, 0]);
   
@@ -198,12 +201,12 @@ function LocationItem({ location, onDeleteRequest, onEditRequest }: { location: 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden p-2 -m-2"
     >
       {/* Background Delete Action Area */}
       <motion.div 
         style={{ opacity }}
-        className="absolute inset-0 bg-[#FF3B30] flex items-center justify-end px-6 rounded-3xl"
+        className="absolute inset-2 bg-[#FF3B30] flex items-center justify-end px-6 rounded-[24px]"
         onClick={onDeleteRequest}
       >
         <div className="flex flex-col items-center gap-1 text-white">
@@ -214,18 +217,26 @@ function LocationItem({ location, onDeleteRequest, onEditRequest }: { location: 
 
       <motion.div
         drag="x"
-        dragConstraints={{ left: -100, right: 0 }}
-        dragElastic={0.1}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={{ left: 0.4, right: 0 }}
         style={{ x }}
+        onDragStart={() => {
+          isDragging.current = true;
+        }}
         onDragEnd={(_, info) => {
+          setTimeout(() => {
+            isDragging.current = false;
+          }, 100);
           if (info.offset.x < -60) {
             onDeleteRequest();
           }
-          // Reset position
-          x.set(0);
         }}
-        onClick={onEditRequest}
-        className="relative z-10 bg-surface rounded-[24px] p-5 border border-border flex flex-col gap-2 cursor-pointer active:cursor-grabbing transition-shadow hover:shadow-md"
+        onClick={(e) => {
+          if (!isDragging.current) {
+            onEditRequest();
+          }
+        }}
+        className="relative z-10 bg-surface rounded-[24px] py-4 px-5 border border-border flex flex-col gap-1.5 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
       >
         <div className="flex items-center justify-between">
           <h3 className="md-title-m text-content-primary font-bold uppercase tracking-tight truncate min-w-0">{location.name}</h3>
